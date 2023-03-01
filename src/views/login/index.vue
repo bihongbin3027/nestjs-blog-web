@@ -53,7 +53,7 @@ async function login(formEl: FormInstance | undefined) {
             />
           </el-form-item>
         </el-form>
-        <div class="text-center">
+        <div class="text-center mt-20">
           <el-button type="primary" @click="login(formRuleRef)">
             登录
           </el-button>
