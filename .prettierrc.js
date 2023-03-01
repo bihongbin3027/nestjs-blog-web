@@ -4,6 +4,7 @@
 module.exports = {
   // 指定每个缩进级别的空格数
   tabWidth: 2,
+  printWidth: 80,
   // 使用制表符而不是空格缩进行
   useTabs: false,
   // 在语句末尾打印分号

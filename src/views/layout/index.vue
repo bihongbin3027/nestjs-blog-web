@@ -17,7 +17,7 @@ const heightRs = computed(() => ({
       </el-scrollbar>
     </el-aside>
     <el-container>
-      <el-header class="header">
+      <el-header class="border-b border-b-solid border-b-slate-200">
         <BaseHeader />
       </el-header>
       <el-main>
@@ -30,11 +30,3 @@ const heightRs = computed(() => ({
     </el-container>
   </el-container>
 </template>
-
-<style lang="scss" scoped>
-.header {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: var(--ep-border-color);
-}
-</style>
