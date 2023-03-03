@@ -1,7 +1,14 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+import { $useAxios } from '~/http'
+import { useUserStore } from '~/store/modules/user'
+import type { UserTypes } from '~/store/modules/user'
 
+const userStore = useUserStore()
+const router = useRouter()
 const formRuleRef = ref<FormInstance>()
 const formValue = reactive({
   username: '',
@@ -12,11 +19,35 @@ const formRules = reactive<FormRules>({
   password: [{ required: true, message: '请输入密码' }]
 })
 
+const { data, isLoading, isFinished, execute } = $useAxios<UserTypes>(
+  '/api/auth/login',
+  {
+    method: 'post',
+    data: formValue
+  },
+  {
+    immediate: false
+  }
+)
+
+watch(isFinished, val => {
+  if (val) {
+    if (data.value) {
+      userStore.token = data.value.token
+      ElMessage({
+        message: '登录成功',
+        type: 'success'
+      })
+      router.push('/')
+    }
+  }
+})
+
 async function login(formEl: FormInstance | undefined) {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      console.log('submit')
+      execute()
     } else {
       console.log('error submit!', fields)
     }
@@ -48,13 +79,18 @@ async function login(formEl: FormInstance | undefined) {
           <el-form-item label="密码" prop="password">
             <el-input
               v-model="formValue.password"
+              @keyup.enter="login(formRuleRef)"
               type="password"
               placeholder="请输入密码"
             />
           </el-form-item>
         </el-form>
         <div class="text-center mt-20">
-          <el-button type="primary" @click="login(formRuleRef)">
+          <el-button
+            type="primary"
+            :loading="isLoading"
+            @click="login(formRuleRef)"
+          >
             登录
           </el-button>
         </div>

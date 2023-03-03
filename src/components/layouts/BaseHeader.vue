@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { toggleDark } from '~/composables'
+import { useUserStore } from '~/store/modules/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 function logout() {
   ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
@@ -11,14 +13,11 @@ function logout() {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    // userStore
-    //   .logout()
-    //   .then(() => {
-    //     tagsViewStore.delAllViews();
-    //   })
-    //   .then(() => {
-    //     router.push(`/login?redirect=${route.fullPath}`);
-    //   });
+    userStore.resetUser()
+    ElMessage({
+      message: '退出成功',
+      type: 'success'
+    })
     router.push('/login')
   })
 }
